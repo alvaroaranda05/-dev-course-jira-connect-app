@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="ap-local-base-url" content="$base-url">
+
+    <title>Issue panel</title>
+
+    <script src="https://connect-cdn.atl-paas.net/all.js" data-options="sizeToParent:true;hideFooter:true"></script>
+    <script>
+        var i18n = ${i18n};
+        var baseUrl = "$base-url";
+        var appKey = "$appKey";
+        var hostBaseUrl = "";
+        var userLocale = "";
+        var accountId = "$accountId";
+
+        console.log(i18n)
+
+        window.addEventListener("load", function(){
+            var pageDiv = document.getElementById("issue-panel-page-container");
+            var pageSpan = document.createElement("span");
+            pageSpan.textContent = i18n["connect.issuepanel.description"];
+            pageDiv.appendChild(pageSpan);
+        });
+    </script>
+</head>
+<body>
+<div id="issue-panel-page-container" class="connect-page-container">
+</div>
+</body>
+</html>

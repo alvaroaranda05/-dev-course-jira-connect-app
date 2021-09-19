@@ -1,0 +1,48 @@
+spring.application.name: Connect App
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+  datasource:
+    initialization-mode: never
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/Connect?stringtype=unspecified
+    username: postgres
+    password: postgres
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      poolName: connect
+      maximum-pool-size: 1
+  data:
+    web:
+      pageable:
+        max-page-size: 50
+        page-parameter: page
+        size-parameter: size
+        one-indexed-parameters: true
+  main:
+    banner-mode: off
+
+debug: false
+
+server:
+  tomcat:
+    max-threads: 50
+  port: 8080
+
+connect:
+  environment: production
+
+
+addon:
+  key: com.deiser.jira.connect
+  base-url: http://localhost:${local.server.port}
+
+management:
+  web:
+    exposure:
+      include: "*"
+
+atlassian:
+  connect:
+    require-auth-exclude-paths: /v3/api-docs/**,/swagger-ui.html

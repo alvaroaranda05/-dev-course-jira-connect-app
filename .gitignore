@@ -1,0 +1,55 @@
+
+# IDE EXCLUSIONS ###
+
+# IntelliJ
+*.iml
+.idea/*
+!.idea/fileTemplates/
+# Exclude ".idea" folder in all directories
+.idea/
+
+# Eclipse
+/.settings
+/.classpath
+/.project
+
+# OS EXCLUSIONS ###
+
+# MacOs
+
+# Folder properties file
+.DS_Store
+
+# Windows
+
+# Batch script files
+*.bat
+# Configuration files
+*.ini
+
+# BUILD EXCLUSIONS ###
+
+# Exclude "target" folder in all directories
+target/
+
+# Exclude folder for javascript generated components
+src/main/resources/public/component/
+
+# Exclude NodeJs dependecies folder
+node_modules
+
+
+/bin
+**/*/__pycache__
+nbactions.xml
+addon-db.*
+velocity.log*
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,7 @@
+{
+    "connect.issuepanel.name": "Panel de issue",
+    "connect.issuepanel.tooltip": "Tooltip del panel de issue",
+    "connect.configuration.page.name": "Página de configuración",
+    "connect.admin.section.name": "Configuración",
+    "connect.admin.webitem.name": "Item de configuración"
+}

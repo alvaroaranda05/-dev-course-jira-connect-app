@@ -1,0 +1,113 @@
+{
+    "key": "${addon.key}",
+    "baseUrl": "${addon.base-url}",
+    "name": "Connect App!",
+    "description": "This is our first App for Jira Cloud!",
+    "vendor": {
+        "name": "DEISER",
+        "url": "https://www.deiser.com"
+    },
+    "enableLicensing": true,
+    "links": {
+        "self": "${addon.base-url}/atlassian-connect.json",
+        "homepage": "${addon.base-url}/atlassian-connect.json"
+    },
+    "authentication": {
+        "type": "jwt"
+    },
+    "lifecycle": {
+        "installed": "/installed",
+        "uninstalled": "/uninstalled",
+        "enabled": "/enabled",
+        "disabled": "/disabled"
+    },
+    "scopes": [
+        "ADMIN",
+        "ACT_AS_USER"
+    ],
+    "translations": {
+        "paths": {
+            "es-ES": "/public/i18n/es_ES.json",
+            "en-US": "/public/i18n/en_US.json"
+        }
+    },
+    "modules": {
+        "jiraIssueContents": [
+            {
+                "icon": {
+                    "width": 0,
+                    "height": 0,
+                    "url": "/my_icon.svg"
+                },
+                "target": {
+                    "type": "web_panel",
+                    "url": "/page/issue-panel-view"
+                },
+                "tooltip": {
+                    "value": "Issue panel tooltip",
+                    "i18n": "connect.issuepanel.tooltip"
+                },
+                "contentPresentConditions": [
+                    {
+                        "condition": "user_is_admin",
+                        "invert": false
+                    }
+                ],
+                "jiraNativeAppsEnabled": false,
+                "name": {
+                    "value": "Issue Panel",
+                    "i18n": "connect.issuepanel.name"
+                },
+                "key": "issue-panel-key"
+            }
+        ],
+        "webSections": [
+            {
+                "key": "configuration-menu-section",
+                "location": "admin_plugins_menu",
+                "name": {
+                    "value": "Configuration",
+                    "i18n": "connect.admin.section.name"
+                }
+            }
+        ],
+        "webItems": [
+            {
+                "key": "configuration-webitem-key",
+                "location": "admin_plugins_menu/configuration-menu-section",
+                "name": {
+                    "value": "Configuration item",
+                    "i18n": "connect.admin.webitem.name"
+                },
+                "url": "/configuration-page-key",
+                "context": "page"
+            }
+        ],
+        "adminPages": [
+            {
+                "url": "/page/configuration-view",
+                "name": {
+                    "value": "Configuration page",
+                    "i18n": "connect.configuration.page.name"
+                },
+                "key": "configuration-page-key"
+            }
+        ],
+        "webhooks": [
+            {
+                "event": "project_created",
+                "url": "/webhooks/projects/created/{project.id}",
+                "excludeBody": false
+            },
+            {
+                "event": "project_deleted",
+                "url": "/webhooks/projects/deleted/{project.id}",
+                "excludeBody": false
+            }
+        ]
+    },
+    "apiMigrations": {
+        "context-qsh": true,
+        "signed-install": true
+    }
+}

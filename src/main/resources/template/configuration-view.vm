@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="ap-local-base-url" content="$base-url">
+
+    <title>Configuration view</title>
+
+    <script src="https://connect-cdn.atl-paas.net/all.js" data-options="sizeToParent:true;hideFooter:true"></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aui/9.4.0/aui/aui-prototyping.min.css"
+          integrity="sha512-u5I3pdDCz8TzwMdi8DVJufVJbcY11JvRNbfPTJ2BTgN4cez+RrA5EekkoMGLmF1jM0LY5pm+4oGo85tDEOxosg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
+    <script>
+        var i18n = ${i18n};
+        var baseUrl = "$base-url";
+        var appKey = "$appKey";
+        var hostBaseUrl = "";
+        var userLocale = "";
+        var accountId = "$accountId";
+    </script>
+    <script>
+        const getConfiguration = async function () {
+            jQuery('tbody>tr').remove();
+            createLoadingRow();
+
+            const response = await fetch(baseUrl + '/configuration/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'JWT ' + await AP.context.getToken().then(token => token)
+                }
+            });
+            const configuration = await response.json();
+
+            if (configuration.length > 0) {
+                jQuery('tbody>tr').remove();
+                configuration.forEach(function (config) {
+                    createRow(config)
+                })
+            } else {
+                jQuery('tbody>tr').remove('');
+                createEmptyRow();
+            }
+        }
+
+        const createConfiguration = async function (key, value) {
+            await fetch(baseUrl + '/configuration/' + key, {
+                method: 'POST',
+                body: value,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'JWT ' + await AP.context.getToken().then(token => token)
+                }
+            });
+            await getConfiguration();
+        }
+
+        const deleteConfiguration = async function (key) {
+            await fetch(baseUrl + '/configuration/' + key, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'JWT ' + await AP.context.getToken().then(token => token)
+                }
+            });
+            await getConfiguration();
+        }
+
+        const cellDelete = function (key) {
+            return "<td headers='head-delete'><button type='button' class='button-delete-config' onclick='deleteConfiguration(\"" + key + "\")'>" + i18n['connect.configuration.cell.delete'] + "</button></td>";
+        }
+
+        const createRow = function (configuration) {
+            jQuery('tbody').append("<tr id='row" + configuration.key + "'><td headers='head-key'>" + configuration.key + "</td><td headers='head-value'>" + configuration.value + "</td>" + cellDelete(configuration.key) + "</tr>")
+        }
+
+        const createEmptyRow = function () {
+            jQuery('tbody').append("<tr id='emptyRow'><td headers='head-key' colspan='3'>" + i18n['connect.configuration.row.empty'] + "</td></tr>")
+        }
+
+        const createLoadingRow = function () {
+            jQuery('tbody').append("<tr id='loadingRow'><td headers='head-key' colspan='3'>" + i18n['connect.configuration.row.loading'] + "</td></tr>")
+        }
+
+        const getMyself = async function () {
+            const user = JSON.parse(await AP.request('/rest/api/3/myself').then(data => data.body));
+            jQuery('#user-info').append('<span>' + i18n['connect.configuration.user.hi'] + '</span>');
+            jQuery('#user-info').append('<img src="' + user.avatarUrls['24x24'] + '" alt="' + user.displayName + '"/>');
+            jQuery('#user-info').append('<span>' + user.displayName + '</span>')
+        }
+
+        jQuery(document).ready(async function () {
+            await getConfiguration();
+            await getMyself();
+
+            document.getElementById('head-key').innerHTML = i18n['connect.configuration.key'];
+            document.getElementById('head-value').innerHTML = i18n['connect.configuration.value'];
+            document.getElementById('key-label').innerHTML = i18n['connect.configuration.key'];
+            document.getElementById('value-label').innerHTML = i18n['connect.configuration.value'];
+            document.getElementById('button-create-config').innerHTML = i18n['connect.configuration.save'];
+
+            jQuery('#button-create-config').click(function (event) {
+                createConfiguration(jQuery('#create-key').val(), jQuery('#create-value').val());
+                event.preventDefault();
+                jQuery('#create-key').val('');
+                jQuery('#create-value').val('');
+            });
+        })
+    </script>
+</head>
+<body>
+<section id="admin-page-container" class="dc-page-container">
+
+    <div id="user-info"></div>
+
+    <div id="table-configuration">
+        <table class="aui">
+            <thead>
+            <tr>
+                <th id="head-key"></th>
+                <th id="head-value"></th>
+                <th id="head-delete"></th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div id="create-config">
+        <form class="aui" onSubmit="javascript:function(e){return false:}">
+            <fieldset>
+                <legend><span>Create component</span></legend>
+                <div class="field-group">
+                    <label for="key" id="key-label"></label>
+                    <input class="text" type="text" id="create-key" name="key" title="Key">
+                </div>
+                <div class="field-group">
+                    <label for="value" id="value-label"></label>
+                    <input class="text" type="text" id="create-value" name="value" title="Value">
+                </div>
+                <div class="buttons-container">
+                    <div class="buttons">
+                        <button class="aui-button aui-button-primary" id="button-create-config" type="submit"></button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+</section>
+</body>
+</html>
